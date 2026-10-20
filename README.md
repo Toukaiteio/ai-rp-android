@@ -11,10 +11,12 @@
 
 ## 构建
 
-需要 Android Studio 或 Gradle 8.7+，并安装 Android SDK 35。
+需要 Android Studio（推荐）或 Gradle 8.7+，并安装 Android SDK 35。
 
 ```bash
-gradlew.bat assembleDebug
+gradle assembleDebug
 ```
+
+也可以直接用 Android Studio 打开本目录并执行 **Build > Make Project**。
 
 当前仓库没有提交签名密钥。发布包应在本地或 CI 注入签名配置。
