@@ -19,4 +19,19 @@ gradlew.bat assembleDebug
 
 也可以直接用 Android Studio 打开本目录并执行 **Build > Make Project**。
 
+## 使用发布签名构建
+
+签名文件不放入仓库。使用现有签名文件构建 release APK 时，在命令行提供凭据：
+
+```bat
+set AI_RP_KEYSTORE=E:\pj2\de_ba\work\daiyosei.jks
+set AI_RP_STORE_PASSWORD=...
+set AI_RP_KEY_ALIAS=...
+set AI_RP_KEY_PASSWORD=...
+gradlew.bat assembleRelease
+```
+
+也可以用 `-PandroidKeystore`、`-PandroidStorePassword`、`-PandroidKeyAlias` 和
+`-PandroidKeyPassword` 传入。不要把密码写进项目文件或提交到 Git。
+
 当前仓库没有提交签名密钥。发布包应在本地或 CI 注入签名配置。
