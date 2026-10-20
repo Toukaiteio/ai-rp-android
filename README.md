@@ -14,7 +14,7 @@
 需要 Android Studio（推荐）或 Gradle 8.7+，并安装 Android SDK 35。
 
 ```bash
-gradle assembleDebug
+gradlew.bat assembleDebug
 ```
 
 也可以直接用 Android Studio 打开本目录并执行 **Build > Make Project**。
