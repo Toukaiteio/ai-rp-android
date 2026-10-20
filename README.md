@@ -9,6 +9,17 @@
 - 会话中的 JPEG/PNG data URL 会随加密会话一起持久化，因此重启 WebView 后图片仍可恢复。
 - 不把密码、派生密钥或 API key 传入原生桥接层。
 
+## 文件选择桥接
+
+页面加载完成后，Android 注入统一的异步接口：
+
+```js
+const file = await window.AndroidBridge.pickFile("application/json,image/png");
+// { name, type, data }，data 为 Base64（不含 data: 前缀）
+```
+
+实现使用 Android `ACTION_OPEN_DOCUMENT` 文件选择器，支持 MIME 类型和常见扩展名，单文件限制为 32 MiB。取消选择或读取失败时 Promise 会 reject。网页端不需要为每个页面单独实现 Activity Result。
+
 ## 构建
 
 需要 Android Studio（推荐）或 Gradle 8.7+，并安装 Android SDK 35。

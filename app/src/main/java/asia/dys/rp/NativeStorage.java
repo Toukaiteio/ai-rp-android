@@ -15,10 +15,16 @@ import java.util.Collections;
 
 /** Stores the already-encrypted values produced by the web Vault. */
 public final class NativeStorage {
-    private final File root;
+    public interface FilePicker {
+        void open(String requestId, String accept);
+    }
 
-    NativeStorage(Context context) {
+    private final File root;
+    private final FilePicker filePicker;
+
+    NativeStorage(Context context, FilePicker filePicker) {
         root = new File(context.getFilesDir(), "ai-rp");
+        this.filePicker = filePicker;
     }
 
     private File scopeDir(String scope) {
@@ -75,5 +81,10 @@ public final class NativeStorage {
     public synchronized void storageClear(String scope) {
         File[] files = scopeDir(scope).listFiles();
         if (files != null) for (File file : files) if (!file.delete()) throw new IllegalStateException("cannot clear storage");
+    }
+
+    @JavascriptInterface
+    public void pickFileNative(String requestId, String accept) {
+        if (filePicker != null) filePicker.open(requestId, accept);
     }
 }
