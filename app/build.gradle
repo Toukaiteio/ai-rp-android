@@ -12,19 +12,27 @@ android {
         versionName "0.1.0"
     }
 
+    def releaseKeystore = providers.gradleProperty("androidKeystore")
+            .orElse(providers.environmentVariable("AI_RP_KEYSTORE"))
+
     signingConfigs {
         release {
-            def signingFile = providers.gradleProperty("androidKeystore").orElse(providers.environmentVariable("AI_RP_KEYSTORE")).get()
-            storeFile file(signingFile)
-            storePassword providers.gradleProperty("androidStorePassword").orElse(providers.environmentVariable("AI_RP_STORE_PASSWORD")).get()
-            keyAlias providers.gradleProperty("androidKeyAlias").orElse(providers.environmentVariable("AI_RP_KEY_ALIAS")).get()
-            keyPassword providers.gradleProperty("androidKeyPassword").orElse(providers.environmentVariable("AI_RP_KEY_PASSWORD")).get()
+            if (releaseKeystore.present) {
+                storeFile file(releaseKeystore.get())
+                storePassword providers.gradleProperty("androidStorePassword").orElse(providers.environmentVariable("AI_RP_STORE_PASSWORD")).get()
+                keyAlias providers.gradleProperty("androidKeyAlias").orElse(providers.environmentVariable("AI_RP_KEY_ALIAS")).get()
+                keyPassword providers.gradleProperty("androidKeyPassword").orElse(providers.environmentVariable("AI_RP_KEY_PASSWORD")).get()
+            }
         }
     }
 
     buildTypes {
-        release { minifyEnabled false }
-        release { signingConfig signingConfigs.release }
+        release {
+            minifyEnabled false
+            if (releaseKeystore.present) {
+                signingConfig signingConfigs.release
+            }
+        }
     }
 
     compileOptions {
