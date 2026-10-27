@@ -46,3 +46,35 @@ gradlew.bat assembleRelease
 `-PandroidKeyPassword` 传入。不要把密码写进项目文件或提交到 Git。
 
 当前仓库没有提交签名密钥。发布包应在本地或 CI 注入签名配置。
+
+## GitHub Actions 自动构建
+
+[`.github/workflows/android.yml`](.github/workflows/android.yml) 会在 push 到 `master`/`main`、提交 Pull Request 或手动触发时构建 APK：
+
+- 每次都构建 Debug APK，并作为 `app-debug` artifact 上传。
+- 如果配置了发布签名 secrets，还会构建签名 Release APK，并作为 `app-release` artifact 上传。
+
+在仓库的 **Settings → Secrets and variables → Actions** 中添加以下 secrets：
+
+| Secret | 内容 |
+| --- | --- |
+| `AI_RP_KEYSTORE_BASE64` | keystore 文件的 Base64 编码 |
+| `AI_RP_STORE_PASSWORD` | keystore 密码 |
+| `AI_RP_KEY_ALIAS` | 密钥别名 |
+| `AI_RP_KEY_PASSWORD` | 密钥密码 |
+
+生成 Base64（Git Bash）：
+
+```bash
+base64 -w0 daiyosei.jks
+```
+
+keystore 本身不应提交到仓库，`.gitignore` 已排除 `*.jks`、`*.keystore` 和常见签名配置文件。使用 GitHub CLI 也可以添加 secrets：
+
+```bash
+gh secret set AI_RP_KEYSTORE_BASE64 < keystore.b64
+gh secret set AI_RP_STORE_PASSWORD
+gh secret set AI_RP_KEY_ALIAS
+gh secret set AI_RP_KEY_PASSWORD
+```
+

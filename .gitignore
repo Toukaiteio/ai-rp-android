@@ -8,5 +8,9 @@ local.properties
 *.aab
 *.jks
 *.keystore
+keystore.properties
+signing.properties
 .opencode/
 build-check/
+.DS_Store
+Thumbs.db
